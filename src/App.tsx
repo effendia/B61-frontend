@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import ProductCard from "./components/ProductCard";
+import { useState } from "react";
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+};
 
+function App() {
+  const [cart, setCart] = useState<number[]>([]); 
+
+  const products: Product[] = [
+    {
+      id: 1,
+      name: "Pensil Warna",
+      price: 15000,
+      image: "https://th.bing.com/th/id/OIP.uCSPiDv5bai8f7JdElql6gHaHD?w=226&h=215&c=7&r=0&o=7&pid=1.7&rm=3"
+    },
+    {
+      id: 2,
+      name: "Buku Tulis",
+      price: 10000,
+      image: "https://cf.shopee.co.id/file/0c464acf3afcc06b27644bfc1174d244"
+    }
+  ];
+
+  function handleToggleCart(productId:number) {
+    if (cart.includes(productId)) {
+      setCart(cart.filter((id) => id !== productId))
+    } else {
+      setCart([...cart, productId])
+    }
+  }
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <h1> Product List</h1>
+       <p> 🛒 Cart: {cart.length} items</p>
+
+      <div style={{ display: "flex", gap: "1rem" }}>
+        {products.map((product) => (
+          <ProductCard
+            key={product.id}
+            name={product.name}
+            price={product.price}
+            image={product.image}
+            isAdded={cart.includes(product.id)}
+            onToggle={() => handleToggleCart(product.id)}
+          />
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
